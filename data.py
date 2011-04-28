@@ -53,6 +53,12 @@ def walkTrainDataDoc():
     with open(path) as opened:
       yield (path, f, opened.read())
 
+def walkTrialDataDoc():
+  for path,f in walkMatchedFiles(TRIALDIR, DATA_FILE_REGEX):
+    #print path, f
+    with open(path) as opened:
+      yield (path, f, opened.read())
+
 def processKeyFile(f):
   """
   Takes filename, returns dictionary with answers for every document,
