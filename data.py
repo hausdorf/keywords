@@ -151,5 +151,6 @@ def stemString(string):
 
 def writeResults(predictionlist):
   with open('results.stm', 'w') as w:
-    for p in predictionlist:
-      w.write(p + '\n')
+    for docname,wrdlist in predictionlist:
+      prediction = '%s : %s\n' % (docname, ','.join(wrdlist)[:-1])
+      w.write(prediction)
