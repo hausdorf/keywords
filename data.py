@@ -173,12 +173,19 @@ def findAnswInWordMap(answ, stemdoc):
     else:
       i += 1
 
-def wordmapcmp(x,y):
+def wordmapcmp_xcoord(x,y):
   # NOTE: ASSUMES TERMS DO NOT OVERLAP!
   if x[0] != y[0]:
     return x[0] - y[0]
   else:
     return y[1] - x[1]
+
+def wordmapcmp_ycoord(x,y):
+  # NOTE: ASSUMES TERMS DO NOT OVERLAP!
+  if x[1] != y[1]:
+    return x[1] - y[1]
+  else:
+    return y[0] - x[0]
 
 def stemWord(word):
   """
