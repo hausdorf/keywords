@@ -4,6 +4,7 @@
 #   the same document! They currently all show up in different docs
 # * We want to handle overlapping tags! Currently we just hope there are
 #   no overlapping tags (and this generally seems to be true, fortunately
+# * We want the more "important" features to show up LARGER in the documents
 
 
 import re, sys, string
