@@ -72,6 +72,7 @@ def processKeyFile(f):
   with open(f) as opened:
     for line in opened.readlines():
       docname,answers = line.split(':')
+      docname = docname.strip()
       answers = answers.split(',')
       answers = map(string.strip, answers)
       key[docname] = answers
