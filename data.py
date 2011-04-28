@@ -105,6 +105,22 @@ def trainingKeys(format='stemmed'):
 
   return keylist
 
+def keyHist():
+  """
+  Takes the training keys for author, reader, and combined, outputs
+  a key histogram based on the answers.
+  """
+
+  keylist = trainingKeys()
+
+  hist = defaultdict(lambda:0)
+  for annotator,path,f,key in keylist:
+    for docname,answers in key.items():
+      for answer in answers:
+        hist[answer] += 1
+
+  return hist
+
 def stemWord(word):
   """
   Stems a single word using the Porter stemmer.
