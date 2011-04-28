@@ -26,6 +26,9 @@ STEM_KEY_FILE_REGEX = \
     '(trial|test|train).(author|reader|combined).stem.final'
 LEM_KEY_FILE_REGEX = '(trial|test|train).(author|reader|combined).final'
 
+# GLOBAL DATA
+KEY_TYPES = ['authorkey', 'readerkey', 'combinedkey']
+
 
 def filenameToIdent(filename):
   return re.match(DATA_IDENT_REGEX, filename).group()
@@ -123,6 +126,59 @@ def keyHist():
         hist[answer] += 1
 
   return hist, docs
+
+def docWordMap(document):
+  """
+  Creates a 1-1 bijective pairing between every word and its lemmatized
+  version in a document; takes raw text of document, returns two lists
+  of equal length, one containing all the words in the document, the other
+  containing the lemmatized versions of each of those words.
+  """
+  words = word_tokenize(document)
+  stemmed = [stemWord(word) for word in words]
+
+  return words, stemmed
+
+def findAnswInWordMap(answ, stemdoc):
+  """
+  Takes the stemmed answer, the document, and the stemmed wordmap of the
+  document and looks through them to find the indices where the term
+  appears
+
+  NOTE: DOES NOT HANDLE OVERLAPPING PATTERNS
+  """
+  answwords = word_tokenize(answ)
+  len_stemdoc = len(stemdoc)
+  len_answ = len(answwords)
+  i = 0  # pos in stemdoc
+  j = 0  # pos in answwords
+  while True:
+    if i >= len_stemdoc:
+      break
+
+    if stemdoc[i] == answwords[j]:
+      # Walk through both as long as they match
+      while j < len_answ and i < len_stemdoc and stemdoc[i] == answwords[j]:
+        i += 1
+        j += 1
+
+      # If it's a complete match, yield match indices, else start matching
+      # over again
+      if j == len_answ:
+        yield (i - len_answ, i)
+        j = 0
+      else:
+        i = i - j + 1
+        j = 0
+    else:
+      i += 1
+
+def wordmapcmp(x,y):
+  # NOTE: ASSUMES TERMS DO NOT OVERLAP!
+  if x[0] != y[0]:
+    return x[0] - y[0]
+  else:
+    return y[1] - x[1]
 
 def stemWord(word):
   """
