@@ -114,12 +114,14 @@ def keyHist():
   keylist = trainingKeys()
 
   hist = defaultdict(lambda:0)
+  docs = set()  # set of documents we've consumed; useful for bookkeeping
   for annotator,path,f,key in keylist:
     for docname,answers in key.items():
+      docs.add(docname)
       for answer in answers:
         hist[answer] += 1
 
-  return hist
+  return hist, docs
 
 def stemWord(word):
   """
