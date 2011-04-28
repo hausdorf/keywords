@@ -6,6 +6,7 @@ for us.
 from __future__ import division, with_statement
 import os, re, string
 from nltk import word_tokenize, pos_tag
+from collections import defaultdict
 
 from porter import PorterStemmer
 
@@ -33,7 +34,7 @@ def walkMatchedFiles(direct, fileRegex):
   """
   Walks directory, returns all files that are data files
   """
-  for root,dirs,files in os.walk(TRAINDIR):
+  for root,dirs,files in os.walk(direct):
     for f in files:
       if re.match(fileRegex, f):
         yield direct + f, f
@@ -50,7 +51,7 @@ def walkTrainDataLine():
 def walkTrainDataDoc():
   for path,f in walkMatchedFiles(TRAINDIR, DATA_FILE_REGEX):
     with open(path) as opened:
-      yield (path, f, word_tokenize(opened.read()))
+      yield (path, f, opened.read())
 
 def processKeyFile(f):
   """
