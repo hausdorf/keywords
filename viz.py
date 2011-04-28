@@ -1,3 +1,11 @@
+# TODO TODO TODO
+# THERE ARE MANY THINGS TODO!
+# * We want all three types of key (reader, author, combined) to show up in
+#   the same document! They currently all show up in different docs
+# * We want to handle overlapping tags! Currently we just hope there are
+#   no overlapping tags (and this generally seems to be true, fortunately
+
+
 import re, sys, string
 from itertools import groupby
 
