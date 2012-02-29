@@ -1,9 +1,10 @@
 """
-Series of methods designed to handle and process our designated data for us.
+The core chunk of code designed to handle and process our designated data
+for us.
 """
 
 from __future__ import division, with_statement
-import os, re
+import os, re, string
 
 
 # DATA DIRECTORIES
@@ -51,11 +52,12 @@ def processKeyFile(f):
     for line in opened.readlines():
       docname,answers = line.split(':')
       answers = answers.split(',')
+      answers = map(string.strip, answers)
       key[docname] = answers
 
   return key
 
-def trainingKey(format='stemmed'):
+def trainingKeys(format='stemmed'):
   """
   Obtains author, reader, and combined solutions for each document in
   training set.
@@ -71,7 +73,7 @@ def trainingKey(format='stemmed'):
   elif format == 'lemmatized':
     regex = LEM_KEY_FILE_REGEX
   else:
-    raise "trainingKey() doesn't recognize that type of key!"
+    raise "trainingKeys() doesn't recognize that type of key!"
 
   keylist = []
   for f in walkMatchedFiles(TRAINDIR, regex):
@@ -81,3 +83,5 @@ def trainingKey(format='stemmed'):
     keylist.append((annotator, f, key))
 
   return keylist
+
+def stemWord()
