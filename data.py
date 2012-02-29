@@ -6,6 +6,11 @@ for us.
 from __future__ import division, with_statement
 import os, re, string
 
+from porter import PorterStemmer
+
+
+# Our stemmer, whips words into shape for eval
+PORTER = PorterStemmer()
 
 # DATA DIRECTORIES
 TRAINDIR = 'task05-TRAIN/train/'
@@ -73,7 +78,7 @@ def trainingKeys(format='stemmed'):
   elif format == 'lemmatized':
     regex = LEM_KEY_FILE_REGEX
   else:
-    raise "trainingKeys() doesn't recognize that type of key!"
+    raise ValueError("trainingKeys() doesn't recognize that type of key!")
 
   keylist = []
   for f in walkMatchedFiles(TRAINDIR, regex):
@@ -83,3 +88,32 @@ def trainingKeys(format='stemmed'):
     keylist.append((annotator, f, key))
 
   return keylist
+
+def stemWord(word):
+  """
+  Stems a single word using the Porter stemmer.
+  """
+  output = PORTER.stem(word, 0, len(word) - 1)
+  return output
+
+def stemString(string):
+  """
+  Stems a whole string using the Porter stemmer.
+  """
+  output = ''
+  word = ''
+
+  for c in string:
+    if c.isalpha():
+      word += c.lower()
+    else:
+      if word:
+        output += stemWord(word)
+        word = ''
+      output += c.lower()
+
+  if word:
+    output += stemWord(word)
+
+  return output
+
