@@ -83,5 +83,3 @@ def trainingKeys(format='stemmed'):
     keylist.append((annotator, f, key))
 
   return keylist
-
-def stemWord()
