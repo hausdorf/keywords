@@ -13,7 +13,7 @@ import data
 
 
 def main():
-  trainkeylist = data.trainingKey():
+  trainkeylist = data.trainingKeys():
 
   """
   for line in data.walkTrainData():
