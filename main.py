@@ -9,11 +9,20 @@ task found at[1]. Data is found at[2].
     Extraction...". The URL is:
     http://semeval2.fbk.eu/semeval2.php?location=data
 """
-import data
+import sys
+
+import data, ml
 
 
 def main():
-  trainkeylist = data.trainingKeys()
+  authorkey,combinedkey,readerkey = data.trainingKeys()
+
+  i = 0
+  for path,f,doc in data.walkTrainDataDoc():
+    print doc
+
+    print i
+    i += 1
 
 
 if __name__ == '__main__':

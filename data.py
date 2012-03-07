@@ -5,6 +5,7 @@ for us.
 
 from __future__ import division, with_statement
 import os, re, string
+from nltk import word_tokenize, pos_tag
 
 from porter import PorterStemmer
 
@@ -19,10 +20,14 @@ TESTDIR = 'trial/'
 
 # FILE REGEXES
 DATA_FILE_REGEX = '(C|H|I|J)-\d+.txt.final'
+DATA_IDENT_REGEX = '(C|H|I|J)-\d+'
 STEM_KEY_FILE_REGEX = \
     '(trial|test|train).(author|reader|combined).stem.final'
 LEM_KEY_FILE_REGEX = '(trial|test|train).(author|reader|combined).final'
 
+
+def filenameToIdent(filename):
+  return re.match(DATA_IDENT_REGEX, filename).group()
 
 def walkMatchedFiles(direct, fileRegex):
   """
@@ -31,17 +36,21 @@ def walkMatchedFiles(direct, fileRegex):
   for root,dirs,files in os.walk(TRAINDIR):
     for f in files:
       if re.match(fileRegex, f):
-        yield direct + f
+        yield direct + f, f
 
-def walkTrainData():
+def walkTrainDataLine():
   """
   Walks training data directory, returning each line of each data file, one
   line at a time.
   """
-  for f in walkMatchedFiles(TRAINDIR, DATA_FILE_REGEX):
-    with open(f) as opened:
-      for line in opened.readlines():
-        yield (f, line.strip())
+  for path,f,doc in walkTrainDataDoc():
+    for line in doc:
+      yield (path, f, line.strip())
+
+def walkTrainDataDoc():
+  for path,f in walkMatchedFiles(TRAINDIR, DATA_FILE_REGEX):
+    with open(path) as opened:
+      yield (path, f, word_tokenize(opened.read()))
 
 def processKeyFile(f):
   """
@@ -81,11 +90,11 @@ def trainingKeys(format='stemmed'):
     raise ValueError("trainingKeys() doesn't recognize that type of key!")
 
   keylist = []
-  for f in walkMatchedFiles(TRAINDIR, regex):
+  for path,f in walkMatchedFiles(TRAINDIR, regex):
     annotator = re.search('(author|reader|combined)', f).group()
-    key = processKeyFile(f)
+    key = processKeyFile(path)
 
-    keylist.append((annotator, f, key))
+    keylist.append((annotator, path, f, key))
 
   return keylist
 
@@ -117,3 +126,7 @@ def stemString(string):
 
   return output
 
+def writeResults(predictionlist):
+  with open('results.stm', 'w') as w:
+    for p in predictionlist:
+      w.write(p + '\n')
